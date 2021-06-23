@@ -1,5 +1,7 @@
 ## A selection of animations created using manim
 
+These are samples of animations that appear in videos on my [Youtube channel](https://www.youtube.com/channel/UCMOoG4xb3o0XfG0DcQUkO4Q). Information on the Python package can be found on the [manim repository](https://github.com/ManimCommunity/manim).
+
 ### Triple Clebsch Graph 
 
 This creates a Clebsch graph with blue edges. Two permutations of the graph are then shown in succession using copies of the original (first in red edges, second in yellow edges). This is orchestrated in such a way that the resulting graph is complete and 3-coloured without monochromatic triangles. This is how the Ramsey number R(3,3,3) is established (after the standard counting argument to prove the bound R(3,3,3) ≤ 17).
