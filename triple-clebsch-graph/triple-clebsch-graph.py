@@ -89,6 +89,8 @@ class TripleClebschGraph(Scene):
         for e in edges2:
             start = e.get_start()
             end = e.get_end()
+            # this is a little messy because manim seems to struggle with keeping floats consistent passed a certain number of decimal places
+            # hence rounding to 4 dp to allow an accurate check for whether vertices are in the same spot (there is probably a nicer way of dealing with this)
             s_target = [v.target for v in vtx2 if [round(x,4) for x in list(start)] == [round(y,4) for y in list(v.get_center())]]
             e_target = [v.target for v in vtx2 if [round(x,4) for x in list(end)] == [round(y,4) for y in list(v.get_center())]]
             line_target = Line(s_target[0],e_target[0],stroke_width = wdth).set_color(RED_D)
