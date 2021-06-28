@@ -19,6 +19,7 @@ class TripleClebschGraph(Scene):
         self.add_foreground_mobjects(*vtx)
 
         # these values essentially guide the transformation between copies of the original graph by setting target vertices
+        
         # for outer pentagon
         pts_out_out = [1]
         pts_out_mid = [0]
@@ -29,7 +30,7 @@ class TripleClebschGraph(Scene):
         # no transformation for edges within the inner hexagon
 
         wdth = 1.8 # width for edges
-        # edges between outer pentagon and relevant vertices (BLUE)
+        # edges between outer pentagon and relevant vertices
         edges = []
         for n in range(1,6):
             for crd in pts_out_out:
@@ -68,65 +69,45 @@ class TripleClebschGraph(Scene):
         self.add_foreground_mobjects(*vtx)
         self.play(*[FadeIn(e,run_time=1.5) for e in edges])
         self.wait(1/2)
-
-        # material for first transformation
-        # copy of original vertices
-        vtx2 = [v.copy() for v in vtx]
-        self.add_foreground_mobjects(*vtx2)
-
-        # create targets for copies; note the permutation of the order       
-        vtx_targ = [centre.copy()]        
-        for ls_of_vtx in [vtx2[11:16],vtx2[1:6],vtx2[6:11]]:
-            vtx_targ.extend(ls_of_vtx)
-        for v in vtx2:
-            v.generate_target()
-            v.target.move_to(vtx_targ[vtx2.index(v)])
-            
-        # edges for first copy (RED)
-        edges2 = [e.copy().set_opacity(0) for e in edges]
-        # create target for copies using
-        edge_targ = []
-        for e in edges2:
-            start = e.get_start()
-            end = e.get_end()
-            # this is a little messy because manim seems to struggle with keeping floats consistent passed a certain number of decimal places
-            # hence rounding to 4 dp to allow an accurate check for whether vertices are in the same spot (there is probably a nicer way of dealing with this)
-            s_target = [v.target for v in vtx2 if [round(x,4) for x in list(start)] == [round(y,4) for y in list(v.get_center())]]
-            e_target = [v.target for v in vtx2 if [round(x,4) for x in list(end)] == [round(y,4) for y in list(v.get_center())]]
-            line_target = Line(s_target[0],e_target[0],stroke_width = wdth).set_color(RED_D)
-            edge_targ.append(line_target)
-
-        # animation for first transformtion
-        move_edges = AnimationGroup(*[ReplacementTransform(edges2[k],edge_targ[k]) for k in range(len(edges))])
-        move_pts = AnimationGroup(*[MoveToTarget(v) for v in vtx2])
-
-        # PLAY: first transformation
-        self.play(move_edges,move_pts,run_time=1.5)
-
-        # material for second transformation; identical to previous other than the permutation
-        vtx3 = [v.copy() for v in vtx]
-        self.add_foreground_mobjects(*vtx3)
         
-        vtx_targ2 = [centre.copy()]        
-        for ls in [vtx3[6:11],vtx3[11:16],vtx3[1:6]]:
-            vtx_targ2.extend(ls)
-        for v in vtx3:
-            v.generate_target()
-            v.target.move_to(vtx_targ2[vtx3.index(v)])
+        def transformation(permutation,colour):
 
-        edges3 = [e.copy().set_opacity(0) for e in edges]
-        edge_targ2 = []
-        for e in edges3:
-            start = e.get_start()
-            end = e.get_end()
-            s_target = [v.target for v in vtx3 if [round(x,4) for x in list(start)] == [round(y,4) for y in list(v.get_center())]]
-            e_target = [v.target for v in vtx3 if [round(x,4) for x in list(end)] == [round(y,4) for y in list(v.get_center())]]
-            line_target = Line(s_target[0],e_target[0],stroke_width = wdth).set_color('#E1E332')
-            edge_targ2.append(line_target)
+            # copy vertices
+            vtx_cp = [v.copy() for v in vtx]
+            self.add_foreground_mobjects(*vtx_cp)
+            # vertex targets
+            vtx_targ = [centre.copy()] + [vtx_cp[p] for p in permutation]
+            for v in vtx_cp:
+                v.generate_target()
+                v.target.move_to(vtx_targ[vtx_cp.index(v)])
+                
+            # edges for copy
+            edges_cp = [e.copy().set_opacity(0) for e in edges]
+            # create target for copies using
+            edge_targ = []
+            for e in edges_cp:
+                start = e.get_start()
+                end = e.get_end()
+                # this is a little messy because manim seems to struggle with keeping floats consistent passed a certain number of decimal places
+                # hence rounding to 4 dp to allow an accurate check for whether vertices are in the same spot (there is probably a nicer way of dealing with this)
+                s_target = [v.target for v in vtx_cp if [round(x,4) for x in list(start)] == [round(y,4) for y in list(v.get_center())]]
+                e_target = [v.target for v in vtx_cp if [round(x,4) for x in list(end)] == [round(y,4) for y in list(v.get_center())]]
+                line_target = Line(s_target[0],e_target[0],stroke_width = wdth).set_color(colour)
+                edge_targ.append(line_target)
 
-        move_edges2 = AnimationGroup(*[ReplacementTransform(edges3[k],edge_targ2[k]) for k in range(len(edges))])
-        move_pts2 = AnimationGroup(*[MoveToTarget(v) for v in vtx3])
+            # package animations
+            move_edges = AnimationGroup(*[ReplacementTransform(edges_cp[k],edge_targ[k]) for k in range(len(edges))])
+            move_pts = AnimationGroup(*[MoveToTarget(v) for v in vtx_cp])
 
-        # PLAY: second transformation
-        self.play(move_edges2,move_pts2,run_time =1.5)
+            # PLAY: transformation
+            self.play(move_edges,move_pts,run_time=1.5)
+
+        # first transformation
+        first_perm = [x for x in range(11,16)]+[x for x in range(1,6)]+[x for x in range(6,11)]
+        transformation(first_perm,RED_D)
+        
+        # second transformation
+        scnd_perm = [x for x in range(6,11)]+[x for x in range(11,16)]+[x for x in range(1,6)]
+        transformation(scnd_perm,'#E1E332')
+
         self.play(*[FadeOut(o) for o in self.mobjects])
