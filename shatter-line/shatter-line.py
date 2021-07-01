@@ -7,8 +7,6 @@ class ShatterLine(Scene):
 
         # random permuation of integers between -500 and 499 to randomly allocate centres of rotations
         perm = np.random.permutation([n for n in range(-500,500)])
-        perm1 = perm[:500]
-        perm2 = perm[500:]
         # create centre coordinates
         cents = []
         for k in range(-500,500):
@@ -30,7 +28,7 @@ class ShatterLine(Scene):
         self.play(*[FadeIn(t) for t in dts])
         self.wait()
 
-        # separate into a set of groups of rotations of varying radii and runtime
+        # separate into a set of groups of rotations of varying runtime
         rotate_group1 = AnimationGroup(*[Rotate(dts[n],
                                  PI * updown[n],
                                  about_point=cents[n]) for n in perm[:100]],
