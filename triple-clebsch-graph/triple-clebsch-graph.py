@@ -18,7 +18,7 @@ class TripleClebschGraph(Scene):
             vtx.extend(ls)
         self.add_foreground_mobjects(*vtx)
 
-        # these values essentially guide the transformation between copies of the original graph by setting target vertices
+        # the following values are parameters for defining the Clebsch graph; they are the base on which the graph bases its symmetries
         
         # for outer pentagon
         pts_out_out = [1]
