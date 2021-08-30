@@ -23,3 +23,17 @@ This creates a line (or rather, a series of densely packed points which give the
 ![x](shatter-line/shatter-line-720p.gif)
 
 [Source code](shatter-line/shatter-line.py)
+
+---------
+
+### Flying Angel
+
+##### (from [Strategy on an Infinite Chessboard between an Angel and a Devil](https://www.youtube.com/watch?v=JvhSRCfCHb4))
+
+This creates an angel-like figure, flying into the frame, flapping its wings, and flying away.
+
+![x](flying-angel/flying-angel.gif)
+
+[Source code for building the angel figure](flying-angel/angel.py)
+
+[Source code for animation](flying-angel/angel-flying.py)
